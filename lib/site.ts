@@ -1,7 +1,7 @@
 export const siteName = "Grove";
 
 export const siteDescription =
-  "A small, verified directory of public Grok Bot templates. Find a bot for the job, or share one by pasting its x.ai link.";
+  "A directory of public Grok Bot templates. Search by job, or submit one by pasting its x.ai link.";
 
 export function getSiteUrl() {
   const configured = process.env.NEXT_PUBLIC_SITE_URL;
