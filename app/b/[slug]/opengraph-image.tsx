@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { getBotBySlug } from "@/lib/bots";
 
-export const alt = "A Grok Bot shared on Grove";
+export const alt = "A Grok Bot listed on Grove";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,103 +16,82 @@ export default async function Image({
   const bot = getBotBySlug(slug);
   if (!bot) notFound();
 
+  const initial = bot.name.trim().charAt(0).toUpperCase() || "G";
+
   return new ImageResponse(
     <div
       style={{
         width: "100%",
         height: "100%",
         display: "flex",
-        position: "relative",
-        overflow: "hidden",
-        background: "#F7F8ED",
-        color: "#183B2D",
+        background: "#fafaf8",
+        color: "#1c1c16",
         fontFamily: "Arial, sans-serif",
         padding: "64px 72px",
       }}
     >
       <div
         style={{
-          position: "absolute",
-          width: 520,
-          height: 520,
-          right: -120,
-          top: -180,
-          borderRadius: 999,
-          background: bot.tint,
-        }}
-      />
-      <div
-        style={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
           width: "100%",
+          border: "1px solid #e4e4dc",
+          borderRadius: 8,
+          padding: "48px 52px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div
             style={{
-              width: 54,
-              height: 54,
-              borderRadius: 16,
-              background: "#183B2D",
-              color: "#D4F63F",
+              width: 36,
+              height: 36,
+              borderRadius: 6,
+              background: "#1c1c16",
+              color: "#fafaf8",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 30,
-            }}
-          >
-            <span style={{ display: "flex", color: "#D4F63F", fontWeight: 700 }}>
-              G
-            </span>
-          </div>
-          <div style={{ display: "flex", fontSize: 34, fontWeight: 700 }}>Grove</div>
-          <div
-            style={{
-              marginLeft: "auto",
-              display: "flex",
-              border: "2px solid rgba(24,59,45,.16)",
-              borderRadius: 999,
-              padding: "12px 20px",
               fontSize: 18,
+              fontWeight: 600,
             }}
           >
-            Verified public template
+            G
           </div>
+          <div style={{ display: "flex", fontSize: 26, fontWeight: 600 }}>Grove</div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 48 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           <div
             style={{
-              width: 150,
-              height: 150,
-              borderRadius: 48,
-              background: bot.accent,
+              width: 88,
+              height: 88,
+              borderRadius: 8,
+              background: "#eeeee6",
+              border: "1px solid #e4e4dc",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 16,
-              boxShadow: "inset 0 -18px 28px rgba(0,0,0,.12)",
+              fontSize: 36,
+              fontWeight: 600,
             }}
           >
-            <div style={{ width: 20, height: 50, borderRadius: 999, background: "white" }} />
-            <div style={{ width: 20, height: 50, borderRadius: 999, background: "white" }} />
+            {initial}
           </div>
-          <div style={{ display: "flex", flexDirection: "column", maxWidth: 820 }}>
+          <div style={{ display: "flex", flexDirection: "column", maxWidth: 860 }}>
             <div
               style={{
                 display: "flex",
-                fontSize: 74,
-                lineHeight: 0.98,
-                letterSpacing: -3,
-                fontWeight: 700,
+                fontSize: 64,
+                lineHeight: 1.05,
+                letterSpacing: -1.5,
+                fontWeight: 600,
               }}
             >
               {bot.name}
             </div>
-            <div style={{ display: "flex", marginTop: 18, fontSize: 27, color: "#496458" }}>
-              by {bot.creator} · {bot.role}
+            <div style={{ display: "flex", marginTop: 12, fontSize: 24, color: "#6b6b60" }}>
+              {bot.creator} · {bot.role}
             </div>
           </div>
         </div>
@@ -121,15 +100,15 @@ export default async function Image({
           style={{
             display: "flex",
             alignItems: "center",
-            borderTop: "2px solid rgba(24,59,45,.13)",
-            paddingTop: 25,
-            fontSize: 21,
-            color: "#496458",
+            borderTop: "1px solid #e4e4dc",
+            paddingTop: 22,
+            fontSize: 20,
+            color: "#6b6b60",
           }}
         >
-          A Grok Bot worth sharing
-          <div style={{ marginLeft: "auto", display: "flex", fontWeight: 700, color: "#183B2D" }}>
-            Find it in the Grove →
+          Public Grok Bot template
+          <div style={{ marginLeft: "auto", display: "flex", fontWeight: 600, color: "#1c1c16" }}>
+            grove
           </div>
         </div>
       </div>
