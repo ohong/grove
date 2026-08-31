@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <Theme
           appearance="light"
-          accentColor="olive"
+          accentColor="grass"
           grayColor="sage"
           radius="small"
           scaling="95%"
