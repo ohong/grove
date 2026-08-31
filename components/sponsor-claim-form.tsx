@@ -1,6 +1,17 @@
 "use client";
 
-import { ArrowRight, Check, LoaderCircle, LockKeyhole, RotateCcw } from "lucide-react";
+import {
+  Button,
+  Callout,
+  Card,
+  Flex,
+  Grid,
+  Heading,
+  Select,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
+import { LoaderCircle } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 
 import { formatPrice, sponsorSlots } from "@/lib/sponsors";
@@ -61,160 +72,159 @@ export function SponsorClaimForm({ initialSlot = 2 }: { initialSlot?: number }) 
 
   if (status === "done") {
     return (
-      <div className="rounded-[2rem] border border-leaf/25 bg-lime/45 p-7 sm:p-9" role="status">
-        <span className="flex size-12 items-center justify-center rounded-full bg-ink text-lime">
-          <Check className="size-6" strokeWidth={2.5} />
-        </span>
-        <p className="mt-7 text-xs font-bold tracking-[0.15em] text-ink/55 uppercase">
+      <Card size="3" role="status">
+        <Text size="1" color="gray" weight="medium">
           Interest recorded · no charge made
-        </p>
-        <h2 className="mt-3 font-display text-4xl leading-none font-semibold tracking-[-0.035em]">
-          Slot {String(slot).padStart(2, "0")} is on your radar.
-        </h2>
-        <p className="mt-5 max-w-lg text-sm leading-6 text-ink-soft">
-          Grove saved the request for {brand}. A human can follow up at {email}
-          with availability and payment details. This is not a reservation or a
-          completed purchase.
-        </p>
-        <p className="mt-5 font-mono text-xs text-ink/45">
+        </Text>
+        <Heading as="h2" size="5" weight="medium" highContrast className="mt-2">
+          Slot {String(slot).padStart(2, "0")} request saved.
+        </Heading>
+        <Text as="p" size="2" color="gray" className="mt-3 max-w-lg">
+          Grove saved the request for {brand}. Follow-up can go to {email} with
+          availability and payment details. This is not a reservation or a
+          purchase.
+        </Text>
+        <Text as="p" size="1" color="gray" className="mt-4 font-mono">
           Reference {intentId.slice(0, 8)}
-        </p>
-        <button
+        </Text>
+        <Button
           type="button"
+          size="2"
+          highContrast
+          className="mt-5"
           onClick={() => {
             setStatus("idle");
             setIntentId("");
             setError("");
           }}
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-paper"
         >
-          <RotateCcw className="size-4" /> Edit request
-        </button>
-      </div>
+          Edit request
+        </Button>
+      </Card>
     );
   }
 
   return (
-    <form
-      onSubmit={submitIntent}
-      className="rounded-[2rem] border border-ink/12 bg-white/65 p-5 shadow-[0_22px_65px_rgb(24_59_45/9%)] sm:p-8"
-    >
-      <div className="flex items-start justify-between gap-5 border-b border-ink/10 pb-7">
-        <div>
-          <p className="text-xs font-bold tracking-[0.14em] text-leaf uppercase">
-            Claim a slot
-          </p>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-[-0.03em]">
-            Start with your brand.
-          </h2>
-        </div>
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-paper-deep text-leaf">
-          <LockKeyhole className="size-5" />
-        </span>
-      </div>
+    <Card size="3">
+      <form onSubmit={submitIntent}>
+        <Text size="1" color="gray" weight="medium">
+          Claim a slot
+        </Text>
+        <Heading as="h2" size="5" weight="medium" highContrast className="mt-1">
+          Brand, URL, and contact
+        </Heading>
 
-      <div className="mt-7 grid gap-5 sm:grid-cols-2">
-        <label className="block text-sm font-semibold">
-          Brand name
-          <input
-            required
-            value={brand}
-            onChange={(event) => setBrand(event.target.value)}
-            autoComplete="organization"
-            maxLength={80}
-            placeholder="Acme"
-            className="mt-2.5 h-13 w-full rounded-xl border border-ink/15 bg-paper px-4 text-sm font-normal placeholder:text-ink/35 focus:border-leaf focus:outline-none"
-          />
+        <Grid columns={{ initial: "1", sm: "2" }} gap="3" className="mt-5">
+          <label>
+            <Text as="div" size="2" weight="medium" className="mb-1.5">
+              Brand name
+            </Text>
+            <TextField.Root
+              required
+              value={brand}
+              onChange={(event) => setBrand(event.target.value)}
+              autoComplete="organization"
+              maxLength={80}
+              placeholder="Acme"
+              size="3"
+            />
+          </label>
+          <label>
+            <Text as="div" size="2" weight="medium" className="mb-1.5">
+              Website
+            </Text>
+            <TextField.Root
+              required
+              type="url"
+              value={url}
+              onChange={(event) => setUrl(event.target.value)}
+              autoComplete="url"
+              placeholder="https://acme.com"
+              size="3"
+            />
+          </label>
+          <label className="sm:col-span-2">
+            <Text as="div" size="2" weight="medium" className="mb-1.5">
+              Contact email
+            </Text>
+            <TextField.Root
+              required
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              placeholder="you@acme.com"
+              size="3"
+            />
+          </label>
+          <label className="sm:col-span-2">
+            <Text as="div" size="2" weight="medium" className="mb-1.5">
+              Sponsor slot
+            </Text>
+            <Select.Root
+              required
+              value={String(slot)}
+              onValueChange={(value) => setSlot(Number(value))}
+              size="3"
+            >
+              <Select.Trigger className="w-full" />
+              <Select.Content>
+                {availableSlots.map((item) => (
+                  <Select.Item key={item.slot} value={String(item.slot)}>
+                    Slot {String(item.slot).padStart(2, "0")} — {formatPrice(item.price)}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          </label>
+        </Grid>
+
+        <label className="absolute -left-[10000px]" aria-hidden="true">
+          Company fax
+          <input name="company" tabIndex={-1} autoComplete="off" />
         </label>
-        <label className="block text-sm font-semibold">
-          Website
-          <input
-            required
-            type="url"
-            value={url}
-            onChange={(event) => setUrl(event.target.value)}
-            autoComplete="url"
-            placeholder="https://acme.com"
-            className="mt-2.5 h-13 w-full rounded-xl border border-ink/15 bg-paper px-4 text-sm font-normal placeholder:text-ink/35 focus:border-leaf focus:outline-none"
-          />
-        </label>
-        <label className="block text-sm font-semibold sm:col-span-2">
-          Contact email
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            autoComplete="email"
-            placeholder="you@acme.com"
-            className="mt-2.5 h-13 w-full rounded-xl border border-ink/15 bg-paper px-4 text-sm font-normal placeholder:text-ink/35 focus:border-leaf focus:outline-none"
-          />
-        </label>
-        <label className="block text-sm font-semibold sm:col-span-2">
-          Sponsor slot
-          <select
-            required
-            value={slot}
-            onChange={(event) => setSlot(Number(event.target.value))}
-            className="mt-2.5 h-13 w-full rounded-xl border border-ink/15 bg-paper px-4 text-sm font-normal focus:border-leaf focus:outline-none"
-          >
-            {availableSlots.map((item) => (
-              <option key={item.slot} value={item.slot}>
-                Slot {String(item.slot).padStart(2, "0")} — {formatPrice(item.price)}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
 
-      <label className="absolute -left-[10000px]" aria-hidden="true">
-        Company fax
-        <input name="company" tabIndex={-1} autoComplete="off" />
-      </label>
-
-      <div className="mt-7 rounded-[1.25rem] bg-paper-deep p-5">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold tracking-[0.12em] text-ink-soft uppercase">
-              Selected
-            </p>
-            <p className="mt-1.5 text-sm font-semibold">
-              Slot {String(selected.slot).padStart(2, "0")}
-            </p>
-          </div>
-          <p className="font-display text-3xl font-semibold tracking-[-0.03em]">
-            {formatPrice(selected.price)}
-          </p>
-        </div>
-      </div>
-
-      {error && (
-        <div className="mt-5 rounded-xl border border-coral/35 bg-coral/10 px-4 py-3 text-sm leading-5" role="alert">
-          {error}
-        </div>
-      )}
-
-      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-xs text-xs leading-5 text-ink/50">
-          This records purchase intent only. No card is requested and no payment
-          is charged.
-        </p>
-        <button
-          type="submit"
-          disabled={status === "saving"}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ink px-5 text-sm font-bold text-paper disabled:opacity-50"
+        <Flex
+          align="center"
+          justify="between"
+          className="mt-5 rounded-[var(--radius-3)] bg-[var(--gray-a2)] px-4 py-3"
         >
-          {status === "saving" ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" /> Recording
-            </>
-          ) : (
-            <>
-              Record my interest <ArrowRight className="size-4" />
-            </>
-          )}
-        </button>
-      </div>
-    </form>
+          <Text size="2" color="gray">
+            Slot {String(selected.slot).padStart(2, "0")}
+          </Text>
+          <Text size="4" weight="medium" highContrast>
+            {formatPrice(selected.price)}
+          </Text>
+        </Flex>
+
+        {error && (
+          <Callout.Root color="red" role="alert" className="mt-4">
+            <Callout.Text>{error}</Callout.Text>
+          </Callout.Root>
+        )}
+
+        <Flex
+          align="center"
+          justify="between"
+          gap="3"
+          wrap="wrap"
+          className="mt-5"
+        >
+          <Text size="1" color="gray" className="max-w-xs">
+            Records purchase intent only. No card is requested and no payment is
+            charged.
+          </Text>
+          <Button type="submit" size="2" highContrast disabled={status === "saving"}>
+            {status === "saving" ? (
+              <>
+                <LoaderCircle className="size-4 animate-spin" /> Recording
+              </>
+            ) : (
+              "Record interest"
+            )}
+          </Button>
+        </Flex>
+      </form>
+    </Card>
   );
 }

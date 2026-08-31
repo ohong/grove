@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
+import { Button } from "@radix-ui/themes";
 
 import type { BotStats } from "@/lib/store";
 
@@ -32,12 +32,10 @@ export function MobileAddButton({
   }
 
   return (
-    <a
-      href={addUrl}
-      onClick={recordAdd}
-      className="mt-8 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-ink px-6 text-sm font-bold text-paper lg:hidden"
-    >
-      Add {name} to Grok Bot <ArrowUpRight className="size-4" />
-    </a>
+    <Button asChild size="3" highContrast className="mt-6 w-full lg:hidden">
+      <a href={addUrl} onClick={recordAdd}>
+        Add {name} to Grok Bot
+      </a>
+    </Button>
   );
 }

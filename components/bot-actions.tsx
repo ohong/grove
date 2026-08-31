@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUpRight, Check, Heart, Share2 } from "lucide-react";
+import { Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Check, Heart, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { BotStats } from "@/lib/store";
@@ -96,7 +97,7 @@ export function BotActions({
   async function sharePage() {
     const shareData = {
       title: document.title,
-      text: "A Grok Bot worth sharing on Grove",
+      text: "A Grok Bot on Grove",
       url: window.location.href,
     };
 
@@ -115,66 +116,56 @@ export function BotActions({
 
   return (
     <div>
-      <a
-        href={addUrl}
-        onClick={recordAdd}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-lime px-6 text-sm font-bold text-ink transition-transform hover:-translate-y-0.5"
-      >
-        Add to Grok Bot <ArrowUpRight className="size-4" />
-      </a>
+      <Button asChild size="3" highContrast className="w-full">
+        <a href={addUrl} onClick={recordAdd}>
+          Add to Grok Bot
+        </a>
+      </Button>
 
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <button
+      <Grid columns="2" gap="2" className="mt-2">
+        <Button
           type="button"
+          size="2"
+          variant={stats.viewerLiked ? "solid" : "outline"}
+          color="gray"
+          highContrast={stats.viewerLiked}
           onClick={toggleLike}
           aria-pressed={stats.viewerLiked}
-          className={`flex h-12 items-center justify-center gap-2 rounded-full border text-sm font-semibold transition-colors ${
-            stats.viewerLiked
-              ? "border-coral/35 bg-coral/15 text-ink"
-              : "border-paper/18 bg-paper/[0.06] text-paper hover:bg-paper/10"
-          }`}
         >
-          <Heart
-            className="size-4"
-            fill={stats.viewerLiked ? "currentColor" : "none"}
-          />
+          <Heart className="size-3.5" fill={stats.viewerLiked ? "currentColor" : "none"} />
           {stats.viewerLiked ? "Liked" : "Like"}
-        </button>
-        <button
-          type="button"
-          onClick={sharePage}
-          className="flex h-12 items-center justify-center gap-2 rounded-full border border-paper/18 bg-paper/[0.06] text-sm font-semibold text-paper hover:bg-paper/10"
-        >
-          {copied ? <Check className="size-4" /> : <Share2 className="size-4" />}
+        </Button>
+        <Button type="button" size="2" variant="outline" color="gray" onClick={sharePage}>
+          {copied ? <Check className="size-3.5" /> : <Share2 className="size-3.5" />}
           {copied ? "Copied" : "Share"}
-        </button>
-      </div>
+        </Button>
+      </Grid>
 
-      <div className="mt-6 grid grid-cols-2 border-y border-paper/12 py-5 text-center">
-        <div className="border-r border-paper/12">
-          <p className="font-display text-3xl leading-none font-semibold text-paper">
+      <Flex className="mt-5 border-y border-[var(--gray-a5)] py-4" gap="0">
+        <div className="flex-1 border-r border-[var(--gray-a5)] pr-3 text-center">
+          <Text as="p" size="6" weight="medium" highContrast>
             {stats.adds}
-          </p>
-          <p className="mt-1.5 text-[0.65rem] font-bold tracking-[0.11em] text-paper/65 uppercase">
+          </Text>
+          <Text as="p" size="1" color="gray">
             Add {stats.adds === 1 ? "click" : "clicks"}
-          </p>
+          </Text>
         </div>
-        <div>
-          <p className="font-display text-3xl leading-none font-semibold text-paper">
+        <div className="flex-1 pl-3 text-center">
+          <Text as="p" size="6" weight="medium" highContrast>
             {stats.likes}
-          </p>
-          <p className="mt-1.5 text-[0.65rem] font-bold tracking-[0.11em] text-paper/65 uppercase">
+          </Text>
+          <Text as="p" size="1" color="gray">
             {stats.likes === 1 ? "Like" : "Likes"}
-          </p>
+          </Text>
         </div>
-      </div>
-      <p className="mt-4 text-center text-[0.68rem] leading-5 text-paper/65">
+      </Flex>
+      <Text as="p" size="1" color="gray" className="mt-3 text-center">
         Counts begin at zero and reflect Grove interactions only.
-      </p>
+      </Text>
       {message && (
-        <p className="mt-3 text-center text-xs text-coral" role="status">
+        <Text as="p" size="1" color="red" className="mt-2 text-center" role="status">
           {message}
-        </p>
+        </Text>
       )}
     </div>
   );

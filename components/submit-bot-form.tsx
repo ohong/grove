@@ -1,14 +1,16 @@
 "use client";
 
 import {
-  ArrowRight,
-  BadgeCheck,
-  Check,
-  ExternalLink,
-  Link2,
-  LoaderCircle,
-  RotateCcw,
-} from "lucide-react";
+  Button,
+  Callout,
+  Card,
+  Flex,
+  Heading,
+  Link as RadixLink,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
+import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 
@@ -113,61 +115,53 @@ export function SubmitBotForm() {
 
   if (status === "done" && preview) {
     return (
-      <div className="rounded-[2rem] border border-leaf/25 bg-lime/45 p-7 sm:p-9" role="status">
-        <span className="flex size-12 items-center justify-center rounded-full bg-ink text-lime">
-          <Check className="size-6" strokeWidth={2.5} />
-        </span>
-        <p className="mt-7 text-xs font-bold tracking-[0.15em] text-ink/55 uppercase">
+      <Card size="3" role="status">
+        <Text size="1" color="gray" weight="medium">
           Submission recorded
-        </p>
-        <h2 className="mt-3 font-display text-4xl leading-none font-semibold tracking-[-0.035em]">
+        </Text>
+        <Heading as="h2" size="5" weight="medium" highContrast className="mt-2">
           {preview.name} is in the review queue.
-        </h2>
-        <p className="mt-5 max-w-lg text-sm leading-6 text-ink-soft">
-          Grove saved the public preview exactly as x.ai returned it. We review
-          links before they join the directory so the catalog stays useful.
-        </p>
-        <p className="mt-5 font-mono text-xs text-ink/45">
+        </Heading>
+        <Text as="p" size="2" color="gray" className="mt-3 max-w-lg">
+          Grove saved the public preview exactly as x.ai returned it. Links are
+          reviewed before they join the directory.
+        </Text>
+        <Text as="p" size="1" color="gray" className="mt-4 font-mono">
           Reference {submissionId.slice(0, 8)}
-        </p>
-        <button
+        </Text>
+        <Button
           type="button"
+          size="2"
+          highContrast
+          className="mt-5"
           onClick={() => {
             setLink("");
             setPreview(null);
             setSubmissionId("");
             setStatus("idle");
           }}
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-paper"
         >
-          <RotateCcw className="size-4" /> Share another
-        </button>
-      </div>
+          Share another
+        </Button>
+      </Card>
     );
   }
 
   return (
-    <div className="rounded-[2rem] border border-ink/12 bg-white/60 p-5 shadow-[0_22px_65px_rgb(24_59_45/9%)] sm:p-8">
+    <Card size="3">
       <form onSubmit={inspectLink}>
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold tracking-[0.14em] text-leaf uppercase">
-              Step 1
-            </p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-[-0.03em]">
-              Paste the share link
-            </h2>
-          </div>
-          <span className="flex size-11 items-center justify-center rounded-full bg-paper-deep text-ink-soft">
-            <Link2 className="size-5" />
-          </span>
-        </div>
+        <Text size="1" color="gray" weight="medium">
+          Step 1
+        </Text>
+        <Heading as="h2" size="5" weight="medium" highContrast className="mt-1">
+          Paste the public x.ai link
+        </Heading>
 
-        <label htmlFor="template-link" className="mt-7 block text-sm font-semibold">
-          Public x.ai bot URL
-        </label>
-        <div className="mt-2.5 flex flex-col gap-3 sm:flex-row">
-          <input
+        <Text as="label" htmlFor="template-link" size="2" weight="medium" className="mt-5 block">
+          Bot URL
+        </Text>
+        <Flex gap="2" direction={{ initial: "column", sm: "row" }} className="mt-2">
+          <TextField.Root
             id="template-link"
             type="url"
             inputMode="url"
@@ -176,109 +170,106 @@ export function SubmitBotForm() {
             value={link}
             onChange={(event) => resetPreview(event.target.value)}
             placeholder="https://x.ai/bot/…"
-            className="h-13 min-w-0 flex-1 rounded-xl border border-ink/15 bg-paper px-4 text-sm placeholder:text-ink/35 focus:border-leaf focus:outline-none"
+            className="min-w-0 flex-1"
+            size="3"
           />
-          <button
+          <Button
             type="submit"
+            size="3"
+            highContrast
             disabled={status === "looking" || !link.trim()}
-            className="inline-flex h-13 shrink-0 items-center justify-center gap-2 rounded-xl bg-ink px-5 text-sm font-bold text-paper transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
           >
             {status === "looking" ? (
               <>
-                <LoaderCircle className="size-4 animate-spin" /> Reading x.ai
+                <LoaderCircle className="size-4 animate-spin" /> Reading
               </>
             ) : (
-              <>
-                Inspect link <ArrowRight className="size-4" />
-              </>
+              "Inspect"
             )}
-          </button>
-        </div>
-        <p className="mt-3 text-xs leading-5 text-ink/50">
-          Grove fetches only the public name, creator, and description. Private
-          bot configuration is never requested.
-        </p>
+          </Button>
+        </Flex>
+        <Text as="p" size="1" color="gray" className="mt-2">
+          Grove fetches only the public name, creator, and description.
+        </Text>
       </form>
 
       {error && (
-        <div className="mt-5 rounded-xl border border-coral/35 bg-coral/10 px-4 py-3 text-sm leading-5 text-ink" role="alert">
-          {error}
-        </div>
+        <Callout.Root color="red" role="alert" className="mt-4">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
       )}
 
       {preview && (
-        <div className="mt-8 border-t border-ink/10 pt-8">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-bold tracking-[0.14em] text-leaf uppercase">
-              Step 2 · Confirm the preview
-            </p>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-deep px-3 py-1.5 text-[0.68rem] font-bold tracking-[0.1em] text-leaf uppercase">
-              <BadgeCheck className="size-3.5" /> Source verified
-            </span>
-          </div>
-
-          <div className="mt-5 rounded-[1.4rem] border border-ink/12 bg-paper p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-5">
+        <div className="mt-6 border-t border-[var(--gray-a5)] pt-5">
+          <Text size="1" color="gray" weight="medium">
+            Step 2 · Confirm the preview
+          </Text>
+          <div className="mt-3 rounded-[var(--radius-3)] border border-[var(--gray-a5)] p-4">
+            <Flex align="start" justify="between" gap="4">
               <div>
-                <h3 className="font-display text-3xl leading-none font-semibold tracking-[-0.03em]">
+                <Heading as="h3" size="4" weight="medium" highContrast>
                   {preview.name}
-                </h3>
-                <p className="mt-2 text-sm text-ink-soft">by {preview.creator}</p>
+                </Heading>
+                <Text as="p" size="2" color="gray" className="mt-1">
+                  {preview.creator}
+                </Text>
               </div>
-              <a
-                href={preview.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="flex size-10 shrink-0 items-center justify-center rounded-full border border-ink/12 hover:bg-paper-deep"
-                aria-label="Open public preview on x.ai"
-              >
-                <ExternalLink className="size-4" />
-              </a>
-            </div>
-            <p className="mt-5 text-sm leading-6 text-ink-soft">
+              <RadixLink href={preview.sourceUrl} target="_blank" rel="noreferrer" size="2">
+                x.ai
+              </RadixLink>
+            </Flex>
+            <Text as="p" size="2" color="gray" className="mt-3">
               {preview.description}
-            </p>
-            <p className="mt-5 truncate font-mono text-[0.68rem] text-ink/40">
+            </Text>
+            <Text as="p" size="1" color="gray" className="mt-3 truncate font-mono">
               {preview.templateId}
-            </p>
+            </Text>
           </div>
 
           {existingSlug ? (
-            <div className="mt-5 flex flex-col gap-4 rounded-xl bg-lime/35 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-medium">This bot is already growing in Grove.</p>
-              <Link
-                href={`/b/${existingSlug}`}
-                className="inline-flex items-center gap-2 text-sm font-bold underline decoration-ink/25 underline-offset-4"
-              >
-                View its page <ArrowRight className="size-4" />
-              </Link>
-            </div>
+            <Flex
+              align="center"
+              justify="between"
+              gap="3"
+              wrap="wrap"
+              className="mt-4 rounded-[var(--radius-3)] bg-[var(--gray-a2)] px-4 py-3"
+            >
+              <Text size="2">This bot is already in Grove.</Text>
+              <RadixLink asChild size="2">
+                <Link href={`/b/${existingSlug}`}>View listing</Link>
+              </RadixLink>
+            </Flex>
           ) : (
-            <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="max-w-sm text-xs leading-5 text-ink/50">
-                Submissions enter a review queue; this does not edit or republish
-                the source template.
-              </p>
-              <button
+            <Flex
+              align="center"
+              justify="between"
+              gap="3"
+              wrap="wrap"
+              className="mt-4"
+            >
+              <Text size="1" color="gray" className="max-w-sm">
+                Submissions enter a review queue. This does not edit the source
+                template.
+              </Text>
+              <Button
                 type="button"
+                size="2"
+                highContrast
                 onClick={submitBot}
                 disabled={status === "submitting"}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-leaf px-5 text-sm font-bold text-white disabled:opacity-50"
               >
                 {status === "submitting" ? (
                   <>
                     <LoaderCircle className="size-4 animate-spin" /> Saving
                   </>
                 ) : (
-                  <>
-                    Submit to Grove <ArrowRight className="size-4" />
-                  </>
+                  "Submit to Grove"
                 )}
-              </button>
-            </div>
+              </Button>
+            </Flex>
           )}
         </div>
       )}
-    </div>
+    </Card>
   );
 }
