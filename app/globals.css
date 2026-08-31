@@ -1,0 +1,146 @@
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/newsreader";
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "DM Sans Variable", "Helvetica Neue", sans-serif;
+  --font-display: "Newsreader Variable", Georgia, serif;
+  --color-ink: #183b2d;
+  --color-ink-soft: #496458;
+  --color-paper: #f7f8ed;
+  --color-paper-deep: #eef1df;
+  --color-leaf: #236b48;
+  --color-lime: #d4f63f;
+  --color-coral: #ff6f4d;
+  --color-sun: #ffc857;
+  --color-sky: #bfe7f1;
+  --color-line: #cfd7c8;
+}
+
+:root {
+  --background: #f7f8ed;
+  --foreground: #183b2d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at 12% -8%, rgb(212 246 63 / 18%), transparent 28rem),
+    var(--background);
+  font-family: "DM Sans Variable", "Helvetica Neue", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+summary,
+select {
+  cursor: pointer;
+}
+
+::selection {
+  color: #183b2d;
+  background: #d4f63f;
+}
+
+:focus-visible {
+  outline: 3px solid #ff6f4d;
+  outline-offset: 3px;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgb(247 248 237 / 9%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(247 248 237 / 9%) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.paper-dots {
+  background-image: radial-gradient(rgb(24 59 45 / 15%) 0.7px, transparent 0.7px);
+  background-size: 8px 8px;
+}
+
+.card-lift {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgb(24 59 45 / 10%);
+}
+
+.marquee-track {
+  animation: drift 18s linear infinite;
+}
+
+.loading-dots span {
+  animation: blink 1.2s infinite both;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blink {
+  0%,
+  70%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  35% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .card-lift,
+  .marquee-track,
+  .loading-dots span {
+    animation: none;
+    transition: none;
+  }
+}
